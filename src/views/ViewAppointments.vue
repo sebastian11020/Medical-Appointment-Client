@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="appointments-container">
     <h2>Ver Citas</h2>
     <form @submit.prevent="fetchCitas" class="search-form">
       <label for="startDate">Fecha de Inicio:</label>
@@ -19,18 +19,18 @@
           <p><strong>Nombre:</strong> {{ cita.name }}</p>
           <p><strong>Fecha:</strong> {{ cita.arrivalTime }}</p>
           <p><strong>Estado:</strong> {{ cita.status }}</p>
-          <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" @click="showImage(cita.imageUrl)" />
+          
+          <!-- Imagen centrada en la parte inferior -->
+          <div class="appointment-image-container">
+            <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" />
+          </div>
+
           <button @click="cancelCita(cita.id)" v-if="cita.status === 'active'" class="cancel-button">Cancelar Cita</button>
         </li>
       </ul>
     </div>
     <div v-else>
       <p>No hay citas para el rango de fechas seleccionado.</p>
-    </div>
-
-    <!-- Modal -->
-    <div v-if="modalImage" class="modal" @click="modalImage = null">
-      <img :src="modalImage" class="modal-image" />
     </div>
   </div>
 </template>
@@ -41,8 +41,7 @@ export default {
     return {
       startDate: '',
       endDate: '',
-      citas: [],
-      modalImage: null
+      citas: []
     };
   },
   methods: {
@@ -86,9 +85,6 @@ export default {
         console.error(error);
         alert(error.message || 'Error al cancelar la cita');
       }
-    },
-    showImage(url) {
-      this.modalImage = url;
     }
   }
 };
