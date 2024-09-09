@@ -38,24 +38,27 @@ export default {
       this.file = event.target.files[0];
     },
     async submitForm() {
-  const formData = new FormData();
-  formData.append('name', this.name);
-  formData.append('arrivalTime', this.arrivalTime);
-  formData.append('cedula', this.cedula);
-  if (this.file) {
-    formData.append('image', this.file);
-  }
+      if (!this.file) {
+        alert('Por favor, cargue una imagen.');
+        return;
+      }
 
-  try {
-    const response = await fetch('http://localhost:3000/save', {
-      method: 'POST',
-      body: formData,
-    });
+      const formData = new FormData();
+      formData.append('name', this.name);
+      formData.append('arrivalTime', this.arrivalTime);
+      formData.append('cedula', this.cedula);
+      formData.append('image', this.file);
+
+      try {
+        const response = await fetch('http://localhost:3000/save', {
+          method: 'POST',
+          body: formData,
+        });
 
     if (!response.ok) {
-      const responseData = await response.json();
-      throw new Error(responseData.message || 'Error al guardar la cita');
-    }
+          const responseData = await response.json();
+          throw new Error(responseData.message || 'Error al guardar la cita');
+        }
 
     const responseData = await response.json(); 
     alert(responseData.message || 'Cita guardada correctamente');

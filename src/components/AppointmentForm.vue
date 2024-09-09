@@ -40,18 +40,23 @@ export default {
       this.appointment.image = event.target.files[0];
     },
     async submitForm() {
+      if (!this.appointment.image) {
+        alert('Por favor, cargue una imagen.');
+        return;
+      }
+
       const formData = new FormData();
       formData.append('name', this.appointment.name);
       formData.append('cedula', this.appointment.cedula);
       formData.append('arrivalTime', this.appointment.arrivalTime);
-      if (this.appointment.image) {
-        formData.append('image', this.appointment.image);
-      }
+      formData.append('image', this.appointment.image);
+
       try {
         const response = await fetch('http://localhost:3000/save', {
           method: 'POST',
           body: formData,
         });
+
         if (!response.ok) throw new Error('Error al guardar la cita.');
         alert('Cita guardada exitosamente.');
       } catch (error) {
