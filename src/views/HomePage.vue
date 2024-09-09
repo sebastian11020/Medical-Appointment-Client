@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Asignacion de citas medicas🏥</h1>
+    <h1>🏥Asignacion de citas medicas🏥</h1>
     <nav>
       <ul>
         <li><router-link to="/create" class="btn">Crear Cita</router-link></li>
@@ -21,7 +21,7 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background: #f0f0f0; /* Gris clarito */
+  background: #f0f0f0; 
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -48,7 +48,7 @@ nav ul li {
   margin: 5px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff; 
+  background-color: #bffbff; 
   color: white;
   text-decoration: none;
   text-align: center;
