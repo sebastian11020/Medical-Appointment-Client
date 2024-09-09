@@ -1,8 +1,8 @@
 # Autores
 - Samuel David Vargas Millan
 
-<<<<<<< HEAD
-# citas-medicas-frontend
+
+# Citas-medicas-frontend
 
 ## Project setup
 ```
