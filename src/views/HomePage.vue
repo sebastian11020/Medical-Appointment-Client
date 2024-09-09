@@ -51,8 +51,8 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 800px;
-  max-height: 400px;
+  max-width: 2000px;
+  max-height: 1000px;
   text-align: center;
   padding: 20px;
   background: #e5e5e5; /* Fondo aplicado */
