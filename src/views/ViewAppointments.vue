@@ -1,5 +1,5 @@
 <template>
-  <div class="appointments-container">
+  <div class="container">
     <h2>Ver Citas</h2>
     <form @submit.prevent="fetchCitas" class="search-form">
       <label for="startDate">Fecha de Inicio:</label>
@@ -86,10 +86,13 @@ export default {
 </script>
 
 <style scoped>
-.appointments-container {
-  padding: 20px;
+.container {
   max-width: 800px;
   margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -136,7 +139,7 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-bottom: 10px;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
 }
 
 .appointment-item p {

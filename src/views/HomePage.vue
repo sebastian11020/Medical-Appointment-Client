@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="container">
     <h1>Bienvenido a la Página de Inicio</h1>
     <nav>
       <ul>
@@ -12,23 +12,29 @@
 
 <script>
 export default {
-  name: 'HomePage' // Asegúrate de que el nombre aquí sea 'HomePage'
+  name: 'HomePage'
 };
 </script>
 
 <style scoped>
-.home {
-  text-align: center;
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    text-align: center;
-    color: #333;
+  text-align: center;
+  color: #333;
 }
 
 nav ul {
   list-style-type: none;
   padding: 0;
+  text-align: center;
 }
 
 nav ul li {
@@ -41,8 +47,8 @@ nav ul li {
   padding: 10px 20px;
   margin: 5px;
   border: none;
-  border-radius: 5px;
-  background-color: #007bff; 
+  border-radius: 4px;
+  background-color: #007bff;
   color: white;
   text-decoration: none;
   text-align: center;
