@@ -19,13 +19,18 @@
           <p><strong>Nombre:</strong> {{ cita.name }}</p>
           <p><strong>Fecha:</strong> {{ cita.arrivalTime }}</p>
           <p><strong>Estado:</strong> {{ cita.status }}</p>
-          <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" />
+          <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" @click="showImage(cita.imageUrl)" />
           <button @click="cancelCita(cita.id)" v-if="cita.status === 'active'" class="cancel-button">Cancelar Cita</button>
         </li>
       </ul>
     </div>
     <div v-else>
       <p>No hay citas para el rango de fechas seleccionado.</p>
+    </div>
+
+    <!-- Modal -->
+    <div v-if="modalImage" class="modal" @click="modalImage = null">
+      <img :src="modalImage" class="modal-image" />
     </div>
   </div>
 </template>
@@ -36,7 +41,8 @@ export default {
     return {
       startDate: '',
       endDate: '',
-      citas: []
+      citas: [],
+      modalImage: null
     };
   },
   methods: {
@@ -80,6 +86,9 @@ export default {
         console.error(error);
         alert(error.message || 'Error al cancelar la cita');
       }
+    },
+    showImage(url) {
+      this.modalImage = url;
     }
   }
 };
@@ -90,7 +99,7 @@ export default {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background: #f9f9f9;
+  background: #f0f0f0; /* Gris clarito */
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -151,6 +160,7 @@ h2 {
   max-height: 200px;
   display: block;
   margin-top: 10px;
+  cursor: pointer;
 }
 
 .cancel-button {
@@ -164,5 +174,24 @@ h2 {
 
 .cancel-button:hover {
   background-color: #c82333;
+}
+
+/* Estilos para el modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-image {
+  max-width: 90%;
+  max-height: 90%;
 }
 </style>
