@@ -38,37 +38,36 @@ export default {
       this.file = event.target.files[0];
     },
     async submitForm() {
-  const formData = new FormData();
-  formData.append('name', this.name);
-  formData.append('arrivalTime', this.arrivalTime);
-  formData.append('cedula', this.cedula);
-  if (this.file) {
-    formData.append('image', this.file);
-  }
+      const formData = new FormData();
+      formData.append('name', this.name);
+      formData.append('arrivalTime', this.arrivalTime);
+      formData.append('cedula', this.cedula);
+      if (this.file) {
+        formData.append('image', this.file);
+      }
 
-  try {
-    const response = await fetch('http://localhost:3000/save', {
-      method: 'POST',
-      body: formData,
-    });
+      try {
+        const response = await fetch('http://localhost:3000/save', {
+          method: 'POST',
+          body: formData,
+        });
 
-    if (!response.ok) {
-      const responseData = await response.json();
-      throw new Error(responseData.message || 'Error al guardar la cita');
+        if (!response.ok) {
+          const responseData = await response.json();
+          throw new Error(responseData.message || 'Error al guardar la cita');
+        }
+
+        const responseData = await response.json(); 
+        alert(responseData.message || 'Cita guardada correctamente');
+        this.name = '';
+        this.arrivalTime = '';
+        this.cedula = '';
+        this.file = null;
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Error al guardar la cita');
+      }
     }
-
-    const responseData = await response.json(); 
-    alert(responseData.message || 'Cita guardada correctamente');
-    this.name = '';
-    this.arrivalTime = '';
-    this.cedula = '';
-    this.file = null;
-  } catch (error) {
-    console.error(error);
-    alert(error.message || 'Error al guardar la cita');
-  }
-}
-,
   },
 };
 </script>
@@ -78,6 +77,9 @@ export default {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  background: #f0f0f0; /* Gris clarito */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -86,9 +88,8 @@ h1 {
 }
 
 .appointment-form {
-  background: #f9f9f9;
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 
