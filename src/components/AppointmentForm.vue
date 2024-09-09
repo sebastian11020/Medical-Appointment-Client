@@ -57,9 +57,11 @@ export default {
           body: formData,
         });
 
-        if (!response.ok) throw new Error('Error al guardar la cita.');
-        alert('Cita guardada exitosamente.');
-      } catch (error) {
+        if (!response.ok) {
+          const responseData = await response.json();
+          throw new Error(responseData.message || 'Error al guardar la cita');
+        }
+      catch (error) {
         console.error(error);
         alert('Error al guardar la cita.');
       }
