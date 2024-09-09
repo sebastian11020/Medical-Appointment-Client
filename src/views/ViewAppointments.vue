@@ -1,56 +1,84 @@
 <template>
-    <div class="view-appointments">
-      <h1>Ver Citas</h1>
-      <div v-if="appointments.length === 0" class="no-appointments">
-        <p>No hay citas programadas.</p>
+    <div class="appointments-container">
+      <h2>Ver Citas</h2>
+      <form @submit.prevent="fetchCitas" class="search-form">
+        <label for="startDate">Fecha de Inicio:</label>
+        <input type="date" v-model="startDate" id="startDate" required />
+  
+        <label for="endDate">Fecha de Fin:</label>
+        <input type="date" v-model="endDate" id="endDate" required />
+  
+        <button type="submit">Buscar Citas</button>
+      </form>
+  
+      <div v-if="citas.length > 0" class="appointments-list">
+        <h3>Citas encontradas:</h3>
+        <ul>
+          <li v-for="cita in citas" :key="cita.id" class="appointment-item">
+            <p><strong>ID:</strong> {{ cita.id }}</p>
+            <p><strong>Nombre:</strong> {{ cita.name }}</p>
+            <p><strong>Fecha:</strong> {{ cita.arrivalTime }}</p>
+            <p><strong>Estado:</strong> {{ cita.status }}</p>
+            <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" />
+            <button @click="cancelCita(cita.id)" v-if="cita.status === 'active'" class="cancel-button">Cancelar Cita</button>
+          </li>
+        </ul>
       </div>
-      <ul v-else class="appointments-list">
-        <li v-for="appointment in appointments" :key="appointment.id" class="appointment-item">
-          <div class="appointment-details">
-            <p><strong>Nombre:</strong> {{ appointment.name }}</p>
-            <p><strong>Fecha y Hora:</strong> {{ appointment.arrivalTime }}</p>
-            <p><strong>Cédula:</strong> {{ appointment.cedula }}</p>
-            <p><strong>Estado:</strong> {{ appointment.status }}</p>
-            <img v-if="appointment.image" :src="appointment.imageUrl" alt="Imagen de la cita" class="appointment-image"/>
-          </div>
-          <button v-if="appointment.status === 'active'" @click="cancelAppointment(appointment.id)" class="cancel-btn">
-            Cancelar
-          </button>
-        </li>
-      </ul>
+      <div v-else>
+        <p>No hay citas para el rango de fechas seleccionado.</p>
+      </div>
     </div>
   </template>
   
   <script>
   export default {
-    name: 'ViewAppointments',
     data() {
       return {
-        appointments: []
+        startDate: '',
+        endDate: '',
+        citas: []
       };
     },
-    async created() {
-      try {
-        const response = await fetch('http://localhost:3000/citas?startDate=2024-09-01T00:00:00Z&endDate=2024-09-30T23:59:59Z');
-        this.appointments = await response.json();
-      } catch (error) {
-        console.error('Error al obtener las citas:', error);
-      }
-    },
     methods: {
-      async cancelAppointment(id) {
+      async fetchCitas() {
+        if (!this.startDate || !this.endDate) {
+          alert('Por favor, ingrese ambas fechas.');
+          return;
+        }
+  
+        try {
+          const response = await fetch(`http://localhost:3000/citas?startDate=${this.startDate}&endDate=${this.endDate}`);
+          
+          if (!response.ok) {
+            throw new Error('Error al obtener las citas');
+          }
+          
+          const citas = await response.json();
+          this.citas = citas;
+        } catch (error) {
+          console.error(error);
+          alert(error.message || 'Error al obtener las citas');
+        }
+      },
+      async cancelCita(id) {
         try {
           const response = await fetch(`http://localhost:3000/cancel/${id}`, {
-            method: 'PATCH'
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' }
           });
+  
+          if (!response.ok) {
+            throw new Error('Error al cancelar la cita');
+          }
+  
           const result = await response.json();
           alert(result.message);
-          // Actualiza la lista de citas después de cancelar
-          this.appointments = this.appointments.map(appointment =>
-            appointment.id === id ? { ...appointment, status: 'cancelled' } : appointment
-          );
+          
+          // Actualiza la lista de citas
+          await this.fetchCitas();
         } catch (error) {
-          console.error('Error al cancelar la cita:', error);
+          console.error(error);
+          alert(error.message || 'Error al cancelar la cita');
         }
       }
     }
@@ -58,55 +86,76 @@
   </script>
   
   <style scoped>
-  .view-appointments {
+  .appointments-container {
+    padding: 20px;
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
   }
   
-  h1 {
-    text-align: center;
-    color: #333;
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
   }
   
-  .appointments-list {
-    list-style-type: none;
-    padding: 0;
+  .search-form label {
+    font-weight: bold;
   }
   
-  .appointment-item {
-    background-color: #fff;
-    padding: 15px;
-    margin-bottom: 15px;
+  .search-form input {
+    padding: 8px;
     border: 1px solid #ddd;
-    border-radius: 8px;
-  }
-  
-  .appointment-details {
-    margin-bottom: 10px;
-  }
-  
-  .appointment-image {
-    max-width: 100px;
     border-radius: 4px;
   }
   
-  .cancel-btn {
-    padding: 10px 20px;
-    border: none;
-    background-color: #dc3545;
+  .search-form button {
+    padding: 10px;
+    background-color: #007bff;
     color: white;
+    border: none;
     border-radius: 4px;
     cursor: pointer;
   }
   
-  .cancel-btn:hover {
-    background-color: #c82333;
+  .search-form button:hover {
+    background-color: #0056b3;
   }
   
-  .no-appointments {
-    text-align: center;
-    color: #666;
+  .appointments-list {
+    margin-top: 20px;
+  }
+  
+  .appointment-item {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+  }
+  
+  .appointment-item p {
+    margin: 5px 0;
+  }
+  
+  .appointment-image {
+    max-width: 200px;
+    max-height: 200px;
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .cancel-button {
+    padding: 8px 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .cancel-button:hover {
+    background-color: #c82333;
   }
   </style>
   
