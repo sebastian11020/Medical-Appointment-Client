@@ -8,7 +8,8 @@
       </div>
       <div>
         <label for="cedula">Cédula:</label>
-        <input type="text" v-model="appointment.cedula" required pattern="\d{10}" />
+        <input type="text" v-model="appointment.cedula" @input="validateCedula" required />
+        <p v-if="cedulaError" class="error-message">{{ cedulaError }}</p>
       </div>
       <div>
         <label for="arrivalTime">Fecha y Hora:</label>
@@ -33,28 +34,56 @@ export default {
         arrivalTime: '',
         image: null,
       },
+      cedulaError: '',
     };
   },
   methods: {
     handleFileUpload(event) {
       this.appointment.image = event.target.files[0];
     },
+    validateCedula() {
+      const cedulaLength = this.appointment.cedula.length;
+      if (cedulaLength < 6 || cedulaLength > 10) {
+        this.cedulaError = 'La cédula debe tener entre 6 y 10 dígitos.';
+      } else {
+        this.cedulaError = '';
+      }
+    },
+  
     async submitForm() {
+    this.validateDate();
+
+      if (!this.appointment.image) {
+        alert('Por favor, cargue una imagen.');
+        return;
+      }
+if (this.cedulaError) {
+        alert(this.cedulaError);
+        return;
+      }
       const formData = new FormData();
       formData.append('name', this.appointment.name);
       formData.append('cedula', this.appointment.cedula);
       formData.append('arrivalTime', this.appointment.arrivalTime);
-      if (this.appointment.image) {
-        formData.append('image', this.appointment.image);
-      }
+      formData.append('image', this.appointment.image);
+
       try {
         const response = await fetch('http://localhost:3000/save', {
           method: 'POST',
           body: formData,
         });
-        if (!response.ok) throw new Error('Error al guardar la cita.');
-        alert('Cita guardada exitosamente.');
-      } catch (error) {
+
+        if (!response.ok) {
+          const responseData = await response.json();
+          throw new Error(responseData.message || 'Error al guardar la cita');
+        }
+        const responseData = await response.json();
+        alert(responseData.message || 'Cita guardada correctamente');
+        this.appointment.name = '';
+        this.appointment.cedula = '';
+        this.appointment.arrivalTime = '';
+        this.appointment.image = null;
+      catch (error) {
         console.error(error);
         alert('Error al guardar la cita.');
       }

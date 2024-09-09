@@ -12,7 +12,8 @@
       </div>
       <div class="form-group">
         <label for="cedula">Cédula:</label>
-        <input type="text" id="cedula" v-model="cedula" required />
+        <input type="text" id="cedula" v-model="cedula" @input="validateCedula" required />
+        <p v-if="cedulaError" class="error-message">{{ cedulaError }}</p>
       </div>
       <div class="form-group">
         <label for="image">Imagen:</label>
@@ -31,31 +32,46 @@ export default {
       arrivalTime: '',
       cedula: '',
       file: null,
+      cedulaError: '',
     };
   },
   methods: {
     handleFileUpload(event) {
       this.file = event.target.files[0];
     },
+    validateCedula() {
+      const cedulaLength = this.cedula.length;
+      if (cedulaLength < 6 || cedulaLength > 10) {
+        this.cedulaError = 'La cédula debe tener entre 6 y 10 dígitos.';
+      } else {
+        this.cedulaError = '';
+      }
+    },
     async submitForm() {
-  const formData = new FormData();
-  formData.append('name', this.name);
-  formData.append('arrivalTime', this.arrivalTime);
-  formData.append('cedula', this.cedula);
-  if (this.file) {
-    formData.append('image', this.file);
-  }
+      if (!this.file) {
+        alert('Por favor, cargue una imagen.');
+        return;
+      }
+if (this.cedulaError) {
+        alert(this.cedulaError);
+        return;
+      }
+      const formData = new FormData();
+      formData.append('name', this.name);
+      formData.append('arrivalTime', this.arrivalTime);
+      formData.append('cedula', this.cedula);
+      formData.append('image', this.file);
 
-  try {
-    const response = await fetch('http://localhost:3000/save', {
-      method: 'POST',
-      body: formData,
-    });
+      try {
+        const response = await fetch('http://localhost:3000/save', {
+          method: 'POST',
+          body: formData,
+        });
 
     if (!response.ok) {
-      const responseData = await response.json();
-      throw new Error(responseData.message || 'Error al guardar la cita');
-    }
+          const responseData = await response.json();
+          throw new Error(responseData.message || 'Error al guardar la cita');
+        }
 
     const responseData = await response.json(); 
     alert(responseData.message || 'Cita guardada correctamente');
@@ -109,6 +125,11 @@ input[type="file"] {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
 }
 
 .submit-btn {
