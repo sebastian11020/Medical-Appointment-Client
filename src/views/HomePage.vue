@@ -22,10 +22,8 @@ export default {
 }
 
 h1 {
-  background-color: #add8e6; /* Azul claro */
-  padding: 15px;
-  border-radius: 8px; /* Bordes redondeados para un toque moderno */
-  display: inline-block; /* Ajustar el tamaño del fondo al contenido */
+    text-align: center;
+    color: #333;
 }
 
 nav ul {
@@ -44,7 +42,7 @@ nav ul li {
   margin: 5px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff; /* Azul para el botón */
+  background-color: #007bff; 
   color: white;
   text-decoration: none;
   text-align: center;
@@ -53,6 +51,6 @@ nav ul li {
 }
 
 .btn:hover {
-  background-color: #0056b3; /* Azul oscuro cuando se pasa el ratón */
+  background-color: #0056b3;
 }
 </style>

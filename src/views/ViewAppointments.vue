@@ -93,10 +93,8 @@ export default {
 }
 
 h2 {
-  background-color: #add8e6; 
-  padding: 15px;
-  border-radius: 8px; 
-  display: inline-block; 
+  text-align: center;
+  color: #333;
 }
 
 .search-form {
