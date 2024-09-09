@@ -4,20 +4,20 @@
     <form @submit.prevent="submitForm">
       <div>
         <label for="name">Nombre:</label>
-        <input type="text" v-model="appointment.name" required />
+        <input type="text" v-model="appointment.name" id="name" required />
       </div>
       <div>
         <label for="cedula">Cédula:</label>
-        <input type="text" v-model="appointment.cedula" @input="validateCedula" required />
+        <input type="text" v-model="appointment.cedula" @input="validateCedula" id="cedula" required />
         <p v-if="cedulaError" class="error-message">{{ cedulaError }}</p>
       </div>
       <div>
         <label for="arrivalTime">Fecha y Hora:</label>
-        <input type="datetime-local" v-model="appointment.arrivalTime" required />
+        <input type="datetime-local" v-model="appointment.arrivalTime" id="arrivalTime" required />
       </div>
       <div>
         <label for="image">Imagen del Documento:</label>
-        <input type="file" @change="handleFileUpload" />
+        <input type="file" @change="handleFileUpload" id="image" />
       </div>
       <button type="submit">Guardar Cita</button>
     </form>
@@ -49,18 +49,17 @@ export default {
         this.cedulaError = '';
       }
     },
-  
     async submitForm() {
-    this.validateDate();
-
       if (!this.appointment.image) {
         alert('Por favor, cargue una imagen.');
         return;
       }
-if (this.cedulaError) {
+
+      if (this.cedulaError) {
         alert(this.cedulaError);
         return;
       }
+
       const formData = new FormData();
       formData.append('name', this.appointment.name);
       formData.append('cedula', this.appointment.cedula);
@@ -77,13 +76,16 @@ if (this.cedulaError) {
           const responseData = await response.json();
           throw new Error(responseData.message || 'Error al guardar la cita');
         }
+
         const responseData = await response.json();
         alert(responseData.message || 'Cita guardada correctamente');
+
+        // Reiniciar los campos del formulario
         this.appointment.name = '';
         this.appointment.cedula = '';
         this.appointment.arrivalTime = '';
         this.appointment.image = null;
-      catch (error) {
+      } catch (error) {
         console.error(error);
         alert('Error al guardar la cita.');
       }
@@ -91,3 +93,11 @@ if (this.cedulaError) {
   },
 };
 </script>
+
+<style scoped>
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+</style>
