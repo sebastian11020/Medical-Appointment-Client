@@ -18,10 +18,9 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 600px;
-  margin: 0 auto;
+  text-align: center;
   padding: 20px;
-  background: #f0f0f0; 
+  background: #e5e5e5; /* Fondo aplicado */
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -48,7 +47,7 @@ nav ul li {
   margin: 5px;
   border: none;
   border-radius: 5px;
-  background-color: #bffbff; 
+  background-color: #007bff; 
   color: white;
   text-decoration: none;
   text-align: center;
