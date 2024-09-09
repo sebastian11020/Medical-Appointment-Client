@@ -14,6 +14,7 @@
       <div>
         <label for="arrivalTime">Fecha y Hora:</label>
         <input type="datetime-local" v-model="appointment.arrivalTime" required />
+        <p v-if="dateError" class="error-message">{{ dateError }}</p>
       </div>
       <div>
         <label for="image">Imagen del Documento:</label>
@@ -35,6 +36,7 @@ export default {
         image: null,
       },
       cedulaError: '',
+      dateError: '',
     };
   },
   methods: {
@@ -49,7 +51,18 @@ export default {
         this.cedulaError = '';
       }
     },
+    validateDate() {
+      const appointmentDate = new Date(this.appointment.arrivalTime);
+      const currentDate = new Date();
+      if (appointmentDate < currentDate) {
+        this.dateError = 'La fecha y hora de la cita no puede ser anterior a la fecha y hora actual.';
+      } else {
+        this.dateError = '';
+      }
+    },
     async submitForm() {
+    this.validateDate();
+    
       if (!this.appointment.image) {
         alert('Por favor, cargue una imagen.');
         return;
