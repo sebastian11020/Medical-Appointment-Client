@@ -60,7 +60,9 @@ if (this.cedulaError) {
       formData.append('name', this.name);
       formData.append('arrivalTime', this.arrivalTime);
       formData.append('cedula', this.cedula);
-      formData.append('image', this.file);
+      if (this.file) {
+        formData.append('image', this.file);
+      }
 
       try {
         const response = await fetch('http://localhost:3000/save', {
@@ -68,23 +70,22 @@ if (this.cedulaError) {
           body: formData,
         });
 
-    if (!response.ok) {
+        if (!response.ok) {
           const responseData = await response.json();
           throw new Error(responseData.message || 'Error al guardar la cita');
         }
 
-    const responseData = await response.json(); 
-    alert(responseData.message || 'Cita guardada correctamente');
-    this.name = '';
-    this.arrivalTime = '';
-    this.cedula = '';
-    this.file = null;
-  } catch (error) {
-    console.error(error);
-    alert(error.message || 'Error al guardar la cita');
-  }
-}
-,
+        const responseData = await response.json(); 
+        alert(responseData.message || 'Cita guardada correctamente');
+        this.name = '';
+        this.arrivalTime = '';
+        this.cedula = '';
+        this.file = null;
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Error al guardar la cita');
+      }
+    }
   },
 };
 </script>
@@ -94,6 +95,9 @@ if (this.cedulaError) {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  background: #e5e5e5; /* Fondo aplicado */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
@@ -102,9 +106,8 @@ h1 {
 }
 
 .appointment-form {
-  background: #f9f9f9;
+  background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 

@@ -1,29 +1,64 @@
 <template>
-  <div class="container">
-    <h1>Bienvenido a la Página de Inicio</h1>
+  <div class="home-container">
+     <h1>🏥Asignacion de citas medicas🏥</h1>
     <nav>
       <ul>
-        <li><router-link to="/create" class="btn">Crear Cita</router-link></li>
-        <li><router-link to="/view" class="btn">Ver Citas</router-link></li>
+        <li><button @click="showCreateCita" class="btn">Crear Cita</button></li>
+        <li><button @click="showViewCitas" class="btn">Ver Citas</button></li>
       </ul>
     </nav>
+
+    <!-- Componente de Crear Cita -->
+    <div v-if="showCreate">
+      <CrearCita />
+    </div>
+
+    <!-- Componente de Ver Citas -->
+    <div v-if="showView">
+      <VerCitas />
+    </div>
   </div>
 </template>
 
 <script>
+import CrearCita from './CreateAppointment.vue'; //
+import VerCitas from './ViewAppointments.vue';   
+
 export default {
-  name: 'HomePage'
+  components: {
+    CrearCita,
+    VerCitas
+  },
+  data() {
+    return {
+      showCreate: false,  
+      showView: false    
+    };
+  },
+  methods: {
+    showCreateCita() {
+      this.showCreate = true;
+      this.showView = false; 
+    },
+    showViewCitas() {
+      this.showCreate = false;
+      this.showView = true;  
+    }
+  }
 };
 </script>
 
 <style scoped>
 .container {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 800px;
+  max-height: 1500px;
+  text-align: center;
   padding: 20px;
-  background: #f9f9f9;
+  background: #e5e5e5;
+  background-color: #f9f9f9; 
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center; 
 }
 
 h1 {
@@ -47,8 +82,8 @@ nav ul li {
   padding: 10px 20px;
   margin: 5px;
   border: none;
-  border-radius: 4px;
-  background-color: #007bff;
+  border-radius: 5px;
+  background-color: #007bff; 
   color: white;
   text-decoration: none;
   text-align: center;

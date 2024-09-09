@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="appointments-container">
     <h2>Ver Citas</h2>
     <form @submit.prevent="fetchCitas" class="search-form">
       <label for="startDate">Fecha de Inicio:</label>
@@ -19,13 +19,24 @@
           <p><strong>Nombre:</strong> {{ cita.name }}</p>
           <p><strong>Fecha:</strong> {{ cita.arrivalTime }}</p>
           <p><strong>Estado:</strong> {{ cita.status }}</p>
-          <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" />
+          <img
+            v-if="cita.imageUrl"
+            :src="cita.imageUrl"
+            alt="Imagen de la cita"
+            class="appointment-image"
+            @click="showImage(cita.imageUrl)"
+          />
           <button @click="cancelCita(cita.id)" v-if="cita.status === 'active'" class="cancel-button">Cancelar Cita</button>
         </li>
       </ul>
     </div>
     <div v-else>
       <p>No hay citas para el rango de fechas seleccionado.</p>
+    </div>
+
+    <!-- Modal para mostrar la imagen ampliada -->
+    <div v-if="isImageModalOpen" class="image-modal" @click="closeImage">
+      <img :src="selectedImage" alt="Imagen ampliada" class="large-image" />
     </div>
   </div>
 </template>
@@ -36,7 +47,9 @@ export default {
     return {
       startDate: '',
       endDate: '',
-      citas: []
+      citas: [],
+      isImageModalOpen: false, // Estado para controlar la visibilidad del modal
+      selectedImage: '' // Imagen seleccionada para mostrar
     };
   },
   methods: {
@@ -80,19 +93,26 @@ export default {
         console.error(error);
         alert(error.message || 'Error al cancelar la cita');
       }
+    },
+    // Método para abrir la imagen en el modal
+    showImage(imageUrl) {
+      this.selectedImage = imageUrl;
+      this.isImageModalOpen = true;
+    },
+    // Método para cerrar el modal de imagen
+    closeImage() {
+      this.isImageModalOpen = false;
+      this.selectedImage = '';
     }
   }
 };
 </script>
 
 <style scoped>
-.container {
+.appointments-container {
+  padding: 20px;
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -139,7 +159,7 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-bottom: 10px;
-  background-color: #ffffff;
+  background-color: #f9f9f9;
 }
 
 .appointment-item p {
@@ -150,7 +170,8 @@ h2 {
   max-width: 200px;
   max-height: 200px;
   display: block;
-  margin-top: 10px;
+  margin: 10px auto 0;
+  cursor: pointer;
 }
 
 .cancel-button {
@@ -164,5 +185,25 @@ h2 {
 
 .cancel-button:hover {
   background-color: #c82333;
+}
+
+/* Modal para mostrar la imagen ampliada */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.large-image {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 8px;
 }
 </style>
