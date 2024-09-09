@@ -48,17 +48,17 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .container {
-  max-width: 2000px;
-  max-height: 1000px;
+  max-width: 800px;
+  max-height: 1500px;
   text-align: center;
   padding: 20px;
-  background: #e5e5e5; /* Fondo aplicado */
+  background: #e5e5e5;
+  background-color: #f9f9f9; 
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center; /* Alineación centrada */
+  text-align: center; 
 }
 
 h1 {
