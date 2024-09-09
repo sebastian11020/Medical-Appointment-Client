@@ -1,18 +1,14 @@
 <template>
-  <div class="container"> <!-- Añadido el contenedor principal -->
+  <div class="appointments-container">
     <h2>Ver Citas</h2>
     <form @submit.prevent="fetchCitas" class="search-form">
-      <div class="form-group">
-        <label for="startDate">Fecha de Inicio:</label>
-        <input type="date" v-model="startDate" id="startDate" required />
-      </div>
+      <label for="startDate">Fecha de Inicio:</label>
+      <input type="date" v-model="startDate" id="startDate" required />
 
-      <div class="form-group">
-        <label for="endDate">Fecha de Fin:</label>
-        <input type="date" v-model="endDate" id="endDate" required />
-      </div>
+      <label for="endDate">Fecha de Fin:</label>
+      <input type="date" v-model="endDate" id="endDate" required />
 
-      <button type="submit" class="submit-btn">Buscar Citas</button>
+      <button type="submit">Buscar Citas</button>
     </form>
 
     <div v-if="citas.length > 0" class="appointments-list">
@@ -23,18 +19,24 @@
           <p><strong>Nombre:</strong> {{ cita.name }}</p>
           <p><strong>Fecha:</strong> {{ cita.arrivalTime }}</p>
           <p><strong>Estado:</strong> {{ cita.status }}</p>
-
-          <!-- Imagen centrada en la parte inferior -->
-          <div class="appointment-image-container">
-            <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" />
-          </div>
-
+          <img
+            v-if="cita.imageUrl"
+            :src="cita.imageUrl"
+            alt="Imagen de la cita"
+            class="appointment-image"
+            @click="showImage(cita.imageUrl)"
+          />
           <button @click="cancelCita(cita.id)" v-if="cita.status === 'active'" class="cancel-button">Cancelar Cita</button>
         </li>
       </ul>
     </div>
     <div v-else>
       <p>No hay citas para el rango de fechas seleccionado.</p>
+    </div>
+
+    <!-- Modal para mostrar la imagen ampliada -->
+    <div v-if="isImageModalOpen" class="image-modal" @click="closeImage">
+      <img :src="selectedImage" alt="Imagen ampliada" class="large-image" />
     </div>
   </div>
 </template>
@@ -45,7 +47,9 @@ export default {
     return {
       startDate: '',
       endDate: '',
-      citas: []
+      citas: [],
+      isImageModalOpen: false, // Estado para controlar la visibilidad del modal
+      selectedImage: '' // Imagen seleccionada para mostrar
     };
   },
   methods: {
@@ -89,19 +93,26 @@ export default {
         console.error(error);
         alert(error.message || 'Error al cancelar la cita');
       }
+    },
+    // Método para abrir la imagen en el modal
+    showImage(imageUrl) {
+      this.selectedImage = imageUrl;
+      this.isImageModalOpen = true;
+    },
+    // Método para cerrar el modal de imagen
+    closeImage() {
+      this.isImageModalOpen = false;
+      this.selectedImage = '';
     }
   }
 };
 </script>
 
 <style scoped>
-.container {
-  max-width: 600px;
-  margin: 0 auto;
+.appointments-container {
   padding: 20px;
-  background-color: #e5e5e5;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 h2 {
@@ -116,39 +127,29 @@ h2 {
   margin-bottom: 20px;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
+.search-form label {
   font-weight: bold;
-  margin-bottom: 5px;
 }
 
-input[type="date"] {
-  width: 100%;
+.search-form input {
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.submit-btn {
+.search-form button {
   padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%;
-  text-align: center;
 }
 
-.submit-btn:hover {
+.search-form button:hover {
   background-color: #0056b3;
 }
 
-/* Estilos de la lista de citas */
 .appointments-list {
   margin-top: 20px;
 }
@@ -159,27 +160,18 @@ input[type="date"] {
   border-radius: 4px;
   margin-bottom: 10px;
   background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .appointment-item p {
   margin: 5px 0;
-  text-align: center;
-}
-
-.appointment-image-container {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  width: 100%;
 }
 
 .appointment-image {
   max-width: 200px;
   max-height: 200px;
-  border-radius: 8px;
+  display: block;
+  margin: 10px auto 0;
+  cursor: pointer;
 }
 
 .cancel-button {
@@ -189,10 +181,29 @@ input[type="date"] {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
 .cancel-button:hover {
   background-color: #c82333;
+}
+
+/* Modal para mostrar la imagen ampliada */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.large-image {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 8px;
 }
 </style>
