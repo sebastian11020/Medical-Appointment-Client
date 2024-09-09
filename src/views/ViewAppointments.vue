@@ -1,14 +1,18 @@
 <template>
-  <div class="appointments-container">
+  <div class="container"> <!-- Añadido el contenedor principal -->
     <h2>Ver Citas</h2>
     <form @submit.prevent="fetchCitas" class="search-form">
-      <label for="startDate">Fecha de Inicio:</label>
-      <input type="date" v-model="startDate" id="startDate" required />
+      <div class="form-group">
+        <label for="startDate">Fecha de Inicio:</label>
+        <input type="date" v-model="startDate" id="startDate" required />
+      </div>
 
-      <label for="endDate">Fecha de Fin:</label>
-      <input type="date" v-model="endDate" id="endDate" required />
+      <div class="form-group">
+        <label for="endDate">Fecha de Fin:</label>
+        <input type="date" v-model="endDate" id="endDate" required />
+      </div>
 
-      <button type="submit">Buscar Citas</button>
+      <button type="submit" class="submit-btn">Buscar Citas</button>
     </form>
 
     <div v-if="citas.length > 0" class="appointments-list">
@@ -19,7 +23,7 @@
           <p><strong>Nombre:</strong> {{ cita.name }}</p>
           <p><strong>Fecha:</strong> {{ cita.arrivalTime }}</p>
           <p><strong>Estado:</strong> {{ cita.status }}</p>
-          
+
           <!-- Imagen centrada en la parte inferior -->
           <div class="appointment-image-container">
             <img v-if="cita.imageUrl" :src="cita.imageUrl" alt="Imagen de la cita" class="appointment-image" />
@@ -92,10 +96,10 @@ export default {
 
 <style scoped>
 .container {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background: #e5e5e5; /* Fondo aplicado */
+  background-color: #e5e5e5;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -112,29 +116,39 @@ h2 {
   margin-bottom: 20px;
 }
 
-.search-form label {
-  font-weight: bold;
+.form-group {
+  margin-bottom: 15px;
 }
 
-.search-form input {
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="date"] {
+  width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-.search-form button {
+.submit-btn {
   padding: 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  width: 100%;
+  text-align: center;
 }
 
-.search-form button:hover {
+.submit-btn:hover {
   background-color: #0056b3;
 }
 
+/* Estilos de la lista de citas */
 .appointments-list {
   margin-top: 20px;
 }
@@ -144,19 +158,28 @@ h2 {
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-bottom: 10px;
-  background-color: #ffffff;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .appointment-item p {
   margin: 5px 0;
+  text-align: center;
+}
+
+.appointment-image-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .appointment-image {
   max-width: 200px;
   max-height: 200px;
-  display: block;
-  margin-top: 10px;
-  cursor: pointer;
+  border-radius: 8px;
 }
 
 .cancel-button {
@@ -166,28 +189,10 @@ h2 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .cancel-button:hover {
   background-color: #c82333;
-}
-
-/* Estilos para el modal */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-image {
-  max-width: 90%;
-  max-height: 90%;
 }
 </style>
