@@ -65,6 +65,9 @@ export default {
 h1 {
   text-align: center;
   color: #333;
+  background-color: #add8e6; 
+  padding: 15px;
+  border-radius: 8px; 
 }
 
 .form {
